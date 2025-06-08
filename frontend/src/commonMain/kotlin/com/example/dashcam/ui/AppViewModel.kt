@@ -1,0 +1,20 @@
+package com.example.dashcam.ui
+
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+
+class AppViewModel {
+    private val _screen = MutableStateFlow<Screen>(Screen.Onboarding)
+    val screen: StateFlow<Screen> = _screen
+
+    fun completeOnboarding() { _screen.value = Screen.Login }
+    fun showSignup() { _screen.value = Screen.Signup }
+    fun loginSuccess() { _screen.value = Screen.Main() }
+    fun signupSuccess() { _screen.value = Screen.Main() }
+    fun selectTab(tab: MainTab) {
+        val current = _screen.value
+        if (current is Screen.Main) {
+            _screen.value = current.copy(tab = tab)
+        }
+    }
+}
