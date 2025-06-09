@@ -14,7 +14,6 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.example.dashcam.DashcamViewModel
 import com.example.dashcam.ui.MainTab
@@ -51,8 +50,8 @@ fun MainScreen(tab: MainTab, onSelectTab: (MainTab) -> Unit, dashcamViewModel: D
     }) { inner ->
         Box(Modifier.fillMaxSize().padding(inner)) {
             when (tab) {
-                MainTab.Dashcam -> Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { Text("Dashcam Mode") }
-                MainTab.Sentry -> Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { Text("Sentry Mode") }
+                MainTab.Dashcam -> DashcamScreen()
+                MainTab.Sentry -> SentryScreen(dashcamViewModel)
                 MainTab.History -> HistoryScreen(dashcamViewModel)
                 MainTab.Settings -> SettingsScreen()
             }
