@@ -14,6 +14,7 @@ fun DashcamApp(appViewModel: AppViewModel, dashcamViewModel: DashcamViewModel) {
             Screen.Onboarding -> OnboardingScreen(onDone = appViewModel::completeOnboarding)
             Screen.Login -> LoginScreen(onLogin = appViewModel::loginSuccess, onSignup = appViewModel::showSignup)
             Screen.Signup -> SignupScreen(onSignup = appViewModel::signupSuccess)
+            Screen.Permissions -> PermissionsScreen(onGrant = appViewModel::permissionsGranted)
             is Screen.Main -> MainScreen(s.tab, onSelectTab = appViewModel::selectTab, dashcamViewModel)
         }
     }
