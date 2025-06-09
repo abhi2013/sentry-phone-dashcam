@@ -6,7 +6,7 @@ interface EventService {
 
 class LocalEventService : EventService {
     override fun getEvents(): List<Event> = listOf(
-        Event("Motion detected"),
-        Event("Camera started")
+        Event(EventType.Motion, "Motion detected"),
+        Event(EventType.Person, "Camera started")
     )
 }
