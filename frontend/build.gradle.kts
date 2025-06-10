@@ -1,11 +1,11 @@
 plugins {
     kotlin("multiplatform") version "1.9.10"
     id("org.jetbrains.compose") version "1.5.11"
-    id("com.android.library") version "8.2.0"
+    id("com.android.application") version "8.2.0"
 }
 
 kotlin {
-    android()
+    androidTarget()
     jvm {
         compilations.all {
             kotlinOptions.jvmTarget = "17"
@@ -46,15 +46,33 @@ kotlin {
                 implementation("org.jetbrains.compose.ui:ui-test-junit4:1.5.11")
             }
         }
+        val androidInstrumentedTest by getting {
+            dependencies {
+                implementation("androidx.test.ext:junit:1.1.5")
+                implementation("androidx.test.espresso:espresso-core:3.5.1")
+                implementation("androidx.compose.ui:ui-test-junit4:1.5.11")
+            }
+        }
     }
 }
 
 android {
     namespace = "com.example.dashcam"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
+        applicationId = "com.example.dashcam"
         minSdk = 26
+        targetSdk = 34
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildFeatures {
+        compose = true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.11"
     }
 
     compileOptions {
@@ -71,4 +89,12 @@ compose.desktop {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+}
+
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+    kotlinOptions.jvmTarget = "17"
+}
+
+dependencies {
+    add("debugImplementation", "androidx.compose.ui:ui-test-manifest:1.5.11")
 }
