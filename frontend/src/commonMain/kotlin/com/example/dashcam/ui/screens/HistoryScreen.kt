@@ -11,7 +11,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.dashcam.DashcamViewModel
-
+@Preview
 @Composable
 fun HistoryScreen(viewModel: DashcamViewModel) {
     val events = viewModel.events.collectAsState()

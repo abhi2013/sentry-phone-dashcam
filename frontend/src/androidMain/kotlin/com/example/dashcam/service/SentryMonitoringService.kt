@@ -26,19 +26,18 @@ import org.opencv.core.CvType
 import org.opencv.core.Mat
 import org.opencv.imgproc.Imgproc
 import java.util.concurrent.Executors
+import androidx.lifecycle.LifecycleService
 
 /**
  * Foreground service that would monitor the camera feed using an open source
  * computer vision API such as OpenCV to detect motion or people. Detected
  * events are emitted to [sharedEvents].
  */
-class SentryMonitoringService : Service() {
+class SentryMonitoringService : LifecycleService() {
     private val scope = CoroutineScope(Dispatchers.Default)
     private val executor = Executors.newSingleThreadExecutor()
     private var cameraProvider: ProcessCameraProvider? = null
     private var previous: Mat? = null
-
-    override fun onBind(intent: Intent?): IBinder? = null
 
     override fun onCreate() {
         super.onCreate()

@@ -17,7 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.example.dashcam.DashcamViewModel
 import com.example.dashcam.ui.MainTab
-
+@Preview
 @Composable
 fun MainScreen(tab: MainTab, onSelectTab: (MainTab) -> Unit, dashcamViewModel: DashcamViewModel) {
     Scaffold(bottomBar = {

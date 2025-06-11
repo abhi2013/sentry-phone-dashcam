@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 /**
  * Simple dashcam screen that mocks a recording session.
  */
+@Preview
 @Composable
 fun DashcamScreen() {
     var recording by remember { mutableStateOf(false) }

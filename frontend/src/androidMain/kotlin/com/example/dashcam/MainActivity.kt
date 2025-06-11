@@ -3,6 +3,7 @@ package com.example.dashcam
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import com.example.dashcam.service.AndroidSentryService
 
 class MainActivity : ComponentActivity() {
     private lateinit var dashcamViewModel: DashcamViewModel

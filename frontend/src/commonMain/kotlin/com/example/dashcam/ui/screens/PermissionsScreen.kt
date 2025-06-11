@@ -11,6 +11,7 @@ import androidx.compose.ui.unit.dp
 /**
  * Intermediate screen asking the user to grant camera and notification permissions.
  */
+@Preview
 @Composable
 fun PermissionsScreen(onGrant: () -> Unit) {
     Column(

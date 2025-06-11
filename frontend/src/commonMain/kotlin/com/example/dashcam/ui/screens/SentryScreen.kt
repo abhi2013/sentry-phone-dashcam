@@ -20,6 +20,7 @@ import com.example.dashcam.DashcamViewModel
 /**
  * Screen that allows sentry mode to be toggled and shows recent events.
  */
+@Preview
 @Composable
 fun SentryScreen(viewModel: DashcamViewModel) {
     val enabled = viewModel.sentryEnabled.collectAsState()
