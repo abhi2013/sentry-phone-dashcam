@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import com.example.dashcam.camera.ensureCameraPermission
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -21,8 +22,10 @@ fun PermissionsScreen(onGrant: () -> Unit) {
     ) {
         Text("Permissions required")
         Spacer(Modifier.height(8.dp))
-        Text("Camera and notification access is needed for sentry mode")
+        Text("Camera access lets the app record video while notifications keep you informed of events. Grant these to continue.")
         Spacer(Modifier.height(16.dp))
-        Button(onClick = onGrant) { Text("Grant Permissions") }
+        Button(onClick = { if (ensureCameraPermission()) onGrant() }) {
+            Text("Grant Permissions")
+        }
     }
 }
