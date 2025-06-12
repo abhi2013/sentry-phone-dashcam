@@ -17,10 +17,11 @@ import com.example.dashcam.media.VideoPreview
 import com.example.dashcam.DashcamViewModel
 import com.example.dashcam.Event
 import java.time.Instant
+import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 
-private val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
 
 @Composable
 fun HistoryScreen(
@@ -51,7 +52,7 @@ fun HistoryScreen(
                     Column {
                         Text(event.description, style = MaterialTheme.typography.bodyLarge)
                         Text(
-                            formatter.format(Instant.ofEpochMilli(event.timestamp).atZone(ZoneId.systemDefault())),
+                            formatTime(event.timestamp),
                             style = MaterialTheme.typography.bodySmall,
                             color = Color.Gray,
                         )
@@ -68,4 +69,19 @@ fun HistoryScreen(
             }
         }
     }
+}
+
+private fun formatTime(timestamp: Long): String {
+    val eventDate = Instant.ofEpochMilli(timestamp).atZone(ZoneId.systemDefault()).toLocalDate()
+    val nowDate = LocalDate.now()
+    val days = ChronoUnit.DAYS.between(eventDate, nowDate)
+    val dayLabel = when (days) {
+        0L -> "Today"
+        1L -> "Yesterday"
+        else -> DateTimeFormatter.ofPattern("yyyy-MM-dd").format(eventDate)
+    }
+    val time = DateTimeFormatter.ofPattern("HH:mm").format(
+        Instant.ofEpochMilli(timestamp).atZone(ZoneId.systemDefault())
+    )
+    return "$dayLabel $time"
 }

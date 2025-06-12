@@ -35,11 +35,11 @@ object Settings {
         _humanSensitivity.value = clamped
     }
 
-    const val MIN_DURATION = 0.25f
+    const val MIN_DURATION = 3f
     const val MAX_DURATION = 300f
 
-    const val MIN_EVENT_THROTTLE = 200
-    const val MAX_EVENT_THROTTLE = 3000
+    const val MIN_EVENT_THROTTLE = 3000
+    const val MAX_EVENT_THROTTLE = 30000
 
     const val MIN_SENSITIVITY = 1
     const val MAX_SENSITIVITY = 10

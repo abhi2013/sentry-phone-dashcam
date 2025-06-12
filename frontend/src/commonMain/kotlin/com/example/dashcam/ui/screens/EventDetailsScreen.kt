@@ -12,10 +12,11 @@ import com.example.dashcam.Event
 import com.example.dashcam.media.EventImage
 import com.example.dashcam.media.VideoPreview
 import java.time.Instant
+import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 
-private val detailFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -49,9 +50,24 @@ fun EventDetailsScreen(event: Event, onBack: () -> Unit) {
             Text(event.description, style = MaterialTheme.typography.headlineSmall)
             Spacer(Modifier.height(8.dp))
             Text(
-                detailFormatter.format(Instant.ofEpochMilli(event.timestamp).atZone(ZoneId.systemDefault())),
+                formatTime(event.timestamp),
                 style = MaterialTheme.typography.bodyMedium
             )
         }
     }
+}
+
+private fun formatTime(timestamp: Long): String {
+    val eventDate = Instant.ofEpochMilli(timestamp).atZone(ZoneId.systemDefault()).toLocalDate()
+    val nowDate = LocalDate.now()
+    val days = ChronoUnit.DAYS.between(eventDate, nowDate)
+    val dayLabel = when (days) {
+        0L -> "Today"
+        1L -> "Yesterday"
+        else -> DateTimeFormatter.ofPattern("yyyy-MM-dd").format(eventDate)
+    }
+    val time = DateTimeFormatter.ofPattern("HH:mm").format(
+        Instant.ofEpochMilli(timestamp).atZone(ZoneId.systemDefault())
+    )
+    return "$dayLabel $time"
 }

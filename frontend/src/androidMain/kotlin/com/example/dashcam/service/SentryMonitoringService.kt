@@ -21,6 +21,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import com.example.dashcam.Settings
+import com.example.dashcam.media.sampleVideoBytes
 import org.opencv.imgcodecs.Imgcodecs
 import java.io.File
 import org.opencv.android.OpenCVLoader
@@ -171,8 +172,7 @@ class SentryMonitoringService : LifecycleService() {
     private fun recordVideo(durationSec: Float): String {
         val dir = File(filesDir, "events").apply { mkdirs() }
         val file = File(dir, "video_${System.currentTimeMillis()}.mp4")
-        // Placeholder for real video recording
-        file.writeBytes(ByteArray(0))
+        file.writeBytes(sampleVideoBytes())
         return file.absolutePath
     }
 

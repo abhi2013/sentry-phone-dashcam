@@ -27,10 +27,11 @@ import com.example.dashcam.DashcamViewModel
 import com.example.dashcam.EventType
 import com.example.dashcam.camera.CameraPreview
 import com.example.dashcam.camera.ensureCameraPermission
-import com.example.dashcam.media.EventImage
 import java.time.Instant
+import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 
 /**
  * Screen that allows sentry mode to be toggled and shows recent events.
@@ -82,16 +83,10 @@ fun SentryScreen(viewModel: DashcamViewModel) {
                                 Column {
                                     Text(event.description, style = MaterialTheme.typography.bodyLarge)
                                     Text(
-                                        DateTimeFormatter.ofPattern("HH:mm:ss").format(
-                                            Instant.ofEpochMilli(event.timestamp).atZone(ZoneId.systemDefault())
-                                        ),
+                                        formatTime(event.timestamp),
                                         style = MaterialTheme.typography.bodySmall
                                     )
                                 }
-                            }
-                            event.screenshotPath?.let { path ->
-                                Spacer(Modifier.height(8.dp))
-                                EventImage(path, Modifier.fillMaxWidth().height(120.dp))
                             }
                         }
                     }
@@ -107,4 +102,19 @@ private fun iconForEvent(type: EventType): ImageVector = when (type) {
     EventType.Vehicle -> Icons.Default.DirectionsCar
     EventType.Collision -> Icons.Default.Warning
     EventType.Audio -> Icons.Default.VolumeUp
+}
+
+private fun formatTime(timestamp: Long): String {
+    val eventDate = Instant.ofEpochMilli(timestamp).atZone(ZoneId.systemDefault()).toLocalDate()
+    val nowDate = LocalDate.now()
+    val days = ChronoUnit.DAYS.between(eventDate, nowDate)
+    val dayLabel = when (days) {
+        0L -> "Today"
+        1L -> "Yesterday"
+        else -> DateTimeFormatter.ofPattern("yyyy-MM-dd").format(eventDate)
+    }
+    val time = DateTimeFormatter.ofPattern("HH:mm").format(
+        Instant.ofEpochMilli(timestamp).atZone(ZoneId.systemDefault())
+    )
+    return "$dayLabel $time"
 }
