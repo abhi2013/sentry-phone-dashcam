@@ -19,4 +19,12 @@ class AppViewModel {
             _screen.value = current.copy(tab = tab)
         }
     }
+
+    fun showEvent(event: com.example.dashcam.Event) {
+        _screen.value = Screen.EventDetail(event)
+    }
+
+    fun closeEvent() {
+        _screen.value = Screen.Main(MainTab.History)
+    }
 }

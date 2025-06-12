@@ -42,7 +42,13 @@ class MockSentryService : SentryService {
                     EventType.Collision -> "Possible collision"
                     EventType.Audio -> "Excessive audio detected"
                 }
-                _events.emit(Event(type, desc))
+                _events.emit(
+                    Event(
+                        type = type,
+                        description = desc,
+                        timestamp = System.currentTimeMillis(),
+                    )
+                )
             }
         }
     }

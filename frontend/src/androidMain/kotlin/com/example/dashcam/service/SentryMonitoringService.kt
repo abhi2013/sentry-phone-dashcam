@@ -83,7 +83,15 @@ class SentryMonitoringService : LifecycleService() {
             Imgproc.threshold(diff, diff, 30.0, 255.0, Imgproc.THRESH_BINARY)
             val count = Core.countNonZero(diff)
             if (count > MOTION_THRESHOLD) {
-                scope.launch { sharedEvents.emit(Event(EventType.Motion, "Motion detected")) }
+                scope.launch {
+                    sharedEvents.emit(
+                        Event(
+                            EventType.Motion,
+                            "Motion detected",
+                            timestamp = System.currentTimeMillis(),
+                        )
+                    )
+                }
             }
             diff.release()
             prev.release()

@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.example.dashcam.DashcamViewModel
 import com.example.dashcam.ui.MainTab
+import com.example.dashcam.Event
 
 @Composable
 fun MainScreen(
@@ -24,6 +25,7 @@ fun MainScreen(
     onSelectTab: (MainTab) -> Unit,
     dashcamViewModel: DashcamViewModel,
     onPermissionsRequired: () -> Unit,
+    onEventSelected: (Event) -> Unit = {},
 ) {
     Scaffold(bottomBar = {
         NavigationBar {
@@ -57,7 +59,7 @@ fun MainScreen(
             when (tab) {
                 MainTab.Dashcam -> DashcamScreen(onMissingPermissions = onPermissionsRequired)
                 MainTab.Sentry -> SentryScreen(dashcamViewModel)
-                MainTab.History -> HistoryScreen(dashcamViewModel)
+                MainTab.History -> HistoryScreen(dashcamViewModel, onEventSelected)
                 MainTab.Settings -> SettingsScreen()
             }
         }
