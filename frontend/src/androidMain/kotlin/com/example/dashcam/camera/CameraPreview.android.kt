@@ -62,8 +62,8 @@ actual fun ensureCameraPermission(): Boolean {
             ) == PackageManager.PERMISSION_GRANTED
         )
     }
-    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) {
-        granted = it
+    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { result ->
+        granted = result
     }
 
     LaunchedEffect(Unit) {
