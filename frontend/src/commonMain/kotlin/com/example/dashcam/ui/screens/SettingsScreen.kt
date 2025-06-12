@@ -8,14 +8,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.Button
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.rememberCoroutineScope
-import kotlinx.coroutines.launch
+
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.dashcam.media.VideoPreview
 import com.example.dashcam.Settings
 import kotlin.math.roundToInt
 
@@ -55,25 +51,6 @@ fun SettingsScreen(onShowOnboarding: () -> Unit) {
             valueRange = Settings.MIN_SENSITIVITY.toFloat()..Settings.MAX_SENSITIVITY.toFloat(),
         )
         Spacer(Modifier.height(32.dp))
-        RecordTestVideoSection(duration.value)
-        Spacer(Modifier.height(32.dp))
         Button(onClick = onShowOnboarding) { Text("View Onboarding") }
-    }
-}
-
-@Composable
-private fun RecordTestVideoSection(durationSec: Float) {
-    val scope = rememberCoroutineScope()
-    var path by remember { mutableStateOf<String?>(null) }
-    Column {
-        Button(onClick = {
-            scope.launch {
-                path = com.example.dashcam.media.VideoRecorder.record((durationSec * 1000).roundToInt())
-            }
-        }) { Text("Record Test Video") }
-        path?.let {
-            Spacer(Modifier.height(8.dp))
-            VideoPreview(it, Modifier.fillMaxWidth().height(180.dp))
-        }
     }
 }
