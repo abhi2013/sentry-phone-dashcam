@@ -59,16 +59,23 @@ actual fun ensureCameraPermission(): Boolean {
             ContextCompat.checkSelfPermission(
                 context,
                 Manifest.permission.CAMERA
+            ) == PackageManager.PERMISSION_GRANTED &&
+            ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.FOREGROUND_SERVICE_CAMERA
             ) == PackageManager.PERMISSION_GRANTED
         )
     }
-    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) {
-        granted = it
+    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { result ->
+        granted = result.values.all { it }
     }
 
     LaunchedEffect(Unit) {
         if (!granted) {
-            launcher.launch(Manifest.permission.CAMERA)
+            launcher.launch(arrayOf(
+                Manifest.permission.CAMERA,
+                Manifest.permission.FOREGROUND_SERVICE_CAMERA
+            ))
         }
     }
     return granted
@@ -80,5 +87,9 @@ actual fun isCameraPermissionGranted(): Boolean {
     return ContextCompat.checkSelfPermission(
         context,
         Manifest.permission.CAMERA
-    ) == PackageManager.PERMISSION_GRANTED
+    ) == PackageManager.PERMISSION_GRANTED &&
+        ContextCompat.checkSelfPermission(
+            context,
+            Manifest.permission.FOREGROUND_SERVICE_CAMERA
+        ) == PackageManager.PERMISSION_GRANTED
 }
