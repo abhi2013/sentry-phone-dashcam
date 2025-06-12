@@ -7,12 +7,13 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Image
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.example.dashcam.media.EventImage
+import com.example.dashcam.media.VideoPreview
 import com.example.dashcam.DashcamViewModel
 import com.example.dashcam.Event
 import java.time.Instant
@@ -27,13 +28,14 @@ fun HistoryScreen(
     onEventSelected: (Event) -> Unit = {},
 ) {
     val events = viewModel.events.collectAsState()
+    var expanded by remember { mutableStateOf<Long?>(null) }
     LazyColumn(modifier = Modifier.padding(16.dp)) {
         items(events.value.sortedByDescending { it.timestamp }) { event ->
             Card(
                 modifier = Modifier
                     .padding(vertical = 4.dp)
                     .fillMaxWidth()
-                    .clickable { onEventSelected(event) },
+                    .clickable { expanded = if (expanded == event.timestamp) null else event.timestamp },
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -54,6 +56,14 @@ fun HistoryScreen(
                             color = Color.Gray,
                         )
                     }
+                }
+                event.screenshotPath?.let { path ->
+                    Spacer(Modifier.height(8.dp))
+                    EventImage(path, Modifier.fillMaxWidth().height(120.dp))
+                }
+                if (expanded == event.timestamp && event.videoPath != null) {
+                    Spacer(Modifier.height(8.dp))
+                    VideoPreview(event.videoPath, Modifier.fillMaxWidth().height(180.dp))
                 }
             }
         }

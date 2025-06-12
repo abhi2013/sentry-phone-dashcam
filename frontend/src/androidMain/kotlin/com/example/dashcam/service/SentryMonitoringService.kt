@@ -28,6 +28,8 @@ import org.opencv.core.Core
 import org.opencv.core.CvType
 import org.opencv.core.Mat
 import org.opencv.imgproc.Imgproc
+import org.opencv.objdetect.HOGDescriptor
+import org.opencv.core.MatOfRect
 import java.util.concurrent.Executors
 import androidx.lifecycle.LifecycleService
 
@@ -41,6 +43,8 @@ class SentryMonitoringService : LifecycleService() {
     private val executor = Executors.newSingleThreadExecutor()
     private var cameraProvider: ProcessCameraProvider? = null
     private var previous: Mat? = null
+    private var lastEventTime = 0L
+    private val hog = HOGDescriptor().apply { setSVMDetector(HOGDescriptor.getDefaultPeopleDetector()) }
 
     override fun onCreate() {
         super.onCreate()
@@ -80,25 +84,30 @@ class SentryMonitoringService : LifecycleService() {
         val mat = proxy.toMat()
         val gray = Mat()
         Imgproc.cvtColor(mat, gray, Imgproc.COLOR_RGBA2GRAY)
+        val now = System.currentTimeMillis()
+        if (now - lastEventTime < Settings.eventThrottleMillis.value) {
+            previous?.release()
+            previous = gray
+            mat.release()
+            proxy.close()
+            return
+        }
         previous?.let { prev ->
             val diff = Mat()
             Core.absdiff(prev, gray, diff)
             Imgproc.threshold(diff, diff, 30.0, 255.0, Imgproc.THRESH_BINARY)
             val count = Core.countNonZero(diff)
+            var detected = false
             if (count > MOTION_THRESHOLD) {
-                val screenshot = saveScreenshot(mat)
-                val video = recordVideo(Settings.videoDurationSec.value)
-                scope.launch {
-                    sharedEvents.emit(
-                        Event(
-                            EventType.Motion,
-                            "Motion detected",
-                            timestamp = System.currentTimeMillis(),
-                            screenshotPath = screenshot,
-                            videoPath = video,
-                        )
-                    )
-                }
+                detected = true
+                emitEvent(EventType.Motion, mat)
+            }
+            if (!detected && detectHuman(gray, Settings.humanSensitivity.value)) {
+                detected = true
+                emitEvent(EventType.Person, mat)
+            }
+            if (detected) {
+                lastEventTime = now
             }
             diff.release()
             prev.release()
@@ -162,6 +171,30 @@ class SentryMonitoringService : LifecycleService() {
         // Placeholder for real video recording
         file.writeBytes(ByteArray(0))
         return file.absolutePath
+    }
+
+    private fun emitEvent(type: EventType, mat: Mat) {
+        val screenshot = saveScreenshot(mat)
+        val video = recordVideo(Settings.videoDurationSec.value)
+        scope.launch {
+            sharedEvents.emit(
+                Event(
+                    type = type,
+                    description = if (type == EventType.Person) "Person detected" else "Motion detected",
+                    timestamp = System.currentTimeMillis(),
+                    screenshotPath = screenshot,
+                    videoPath = video,
+                )
+            )
+        }
+    }
+
+    private fun detectHuman(gray: Mat, sensitivity: Int): Boolean {
+        val locations = MatOfRect()
+        hog.detectMultiScale(gray, locations)
+        val count = locations.toArray().size
+        locations.release()
+        return count >= sensitivity / 5
     }
 
     companion object {

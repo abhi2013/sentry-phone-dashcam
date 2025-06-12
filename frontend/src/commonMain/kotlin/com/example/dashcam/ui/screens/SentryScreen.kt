@@ -27,6 +27,10 @@ import com.example.dashcam.DashcamViewModel
 import com.example.dashcam.EventType
 import com.example.dashcam.camera.CameraPreview
 import com.example.dashcam.camera.ensureCameraPermission
+import com.example.dashcam.media.EventImage
+import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 /**
  * Screen that allows sentry mode to be toggled and shows recent events.
@@ -45,7 +49,7 @@ fun SentryScreen(viewModel: DashcamViewModel) {
                 CameraPreview(
                     Modifier
                         .fillMaxWidth()
-                        .height(200.dp)
+                        .height(300.dp)
                 )
                 Spacer(Modifier.height(16.dp))
             }
@@ -56,13 +60,14 @@ fun SentryScreen(viewModel: DashcamViewModel) {
                 Text(if (enabled.value) "Disable Sentry" else "Enable Sentry")
             }
             Spacer(Modifier.height(16.dp))
-            if (events.value.isEmpty()) {
+            val recent = events.value.sortedByDescending { it.timestamp }.take(2)
+            if (recent.isEmpty()) {
                 Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
                     Text("No events detected yet", style = MaterialTheme.typography.bodyMedium)
                 }
             } else {
                 LazyColumn(modifier = Modifier.weight(1f)) {
-                    items(events.value) { event ->
+                    items(recent) { event ->
                         Card(modifier = Modifier.padding(vertical = 4.dp)) {
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
@@ -74,7 +79,19 @@ fun SentryScreen(viewModel: DashcamViewModel) {
                                     tint = MaterialTheme.colorScheme.primary
                                 )
                                 Spacer(Modifier.width(12.dp))
-                                Text(event.description, style = MaterialTheme.typography.bodyLarge)
+                                Column {
+                                    Text(event.description, style = MaterialTheme.typography.bodyLarge)
+                                    Text(
+                                        DateTimeFormatter.ofPattern("HH:mm:ss").format(
+                                            Instant.ofEpochMilli(event.timestamp).atZone(ZoneId.systemDefault())
+                                        ),
+                                        style = MaterialTheme.typography.bodySmall
+                                    )
+                                }
+                            }
+                            event.screenshotPath?.let { path ->
+                                Spacer(Modifier.height(8.dp))
+                                EventImage(path, Modifier.fillMaxWidth().height(120.dp))
                             }
                         }
                     }
