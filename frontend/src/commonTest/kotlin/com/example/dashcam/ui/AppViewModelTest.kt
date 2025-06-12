@@ -5,6 +5,7 @@ import io.kotest.matchers.shouldBe
 
 class AppViewModelTest : BehaviorSpec({
     Given("an app view model") {
+        OnboardingStore.setCompleted(false)
         val vm = AppViewModel()
         When("onboarding is completed") {
             vm.completeOnboarding()
