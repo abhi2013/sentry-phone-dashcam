@@ -5,9 +5,9 @@ import kotlinx.coroutines.flow.StateFlow
 
 /** App-wide settings. */
 object Settings {
-    private val _videoDurationSec = MutableStateFlow(6)
+    private val _videoDurationSec = MutableStateFlow(6f)
     /** Duration of recorded event clips in seconds. */
-    val videoDurationSec: StateFlow<Int> = _videoDurationSec
+    val videoDurationSec: StateFlow<Float> = _videoDurationSec
 
     private val _eventThrottleMillis = MutableStateFlow(1000)
     /** Minimum interval between events in milliseconds. */
@@ -20,7 +20,7 @@ object Settings {
     /**
      * Update desired recording length. Duration is clamped to [MIN_DURATION]..[MAX_DURATION].
      */
-    fun setVideoDuration(seconds: Int) {
+    fun setVideoDuration(seconds: Float) {
         val clamped = seconds.coerceIn(MIN_DURATION, MAX_DURATION)
         _videoDurationSec.value = clamped
     }
@@ -35,8 +35,8 @@ object Settings {
         _humanSensitivity.value = clamped
     }
 
-    const val MIN_DURATION = 6
-    const val MAX_DURATION = 300
+    const val MIN_DURATION = 0.25f
+    const val MAX_DURATION = 300f
 
     const val MIN_EVENT_THROTTLE = 200
     const val MAX_EVENT_THROTTLE = 3000

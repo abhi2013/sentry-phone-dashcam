@@ -168,7 +168,7 @@ class SentryMonitoringService : LifecycleService() {
         return file.absolutePath
     }
 
-    private fun recordVideo(durationSec: Int): String {
+    private fun recordVideo(durationSec: Float): String {
         val dir = File(filesDir, "events").apply { mkdirs() }
         val file = File(dir, "video_${System.currentTimeMillis()}.mp4")
         // Placeholder for real video recording

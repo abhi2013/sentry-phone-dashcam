@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import com.example.dashcam.service.AndroidSentryService
 import com.example.dashcam.ui.OnboardingStore
+import com.example.dashcam.media.VideoRecorder
 
 class MainActivity : ComponentActivity() {
     private lateinit var dashcamViewModel: DashcamViewModel
@@ -12,6 +13,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         dashcamViewModel = DashcamViewModel(LocalEventService(), AndroidSentryService(this))
         OnboardingStore.init(applicationContext)
+        VideoRecorder.init(applicationContext)
         val appViewModel = com.example.dashcam.ui.AppViewModel()
         setContent {
             DashcamApp(appViewModel, dashcamViewModel)
