@@ -10,11 +10,15 @@ class LocalEventService : EventService {
             EventType.Motion,
             "Motion detected",
             timestamp = System.currentTimeMillis() - 3_600_000,
+            screenshotPath = null,
+            videoPath = null,
         ),
         Event(
             EventType.Person,
             "Camera started",
             timestamp = System.currentTimeMillis() - 7_200_000,
+            screenshotPath = null,
+            videoPath = null,
         )
     )
 }

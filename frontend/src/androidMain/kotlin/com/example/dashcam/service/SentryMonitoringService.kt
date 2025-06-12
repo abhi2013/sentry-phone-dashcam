@@ -20,6 +20,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
+import com.example.dashcam.Settings
+import org.opencv.imgcodecs.Imgcodecs
+import java.io.File
 import org.opencv.android.OpenCVLoader
 import org.opencv.core.Core
 import org.opencv.core.CvType
@@ -83,12 +86,16 @@ class SentryMonitoringService : LifecycleService() {
             Imgproc.threshold(diff, diff, 30.0, 255.0, Imgproc.THRESH_BINARY)
             val count = Core.countNonZero(diff)
             if (count > MOTION_THRESHOLD) {
+                val screenshot = saveScreenshot(mat)
+                val video = recordVideo(Settings.videoDurationSec.value)
                 scope.launch {
                     sharedEvents.emit(
                         Event(
                             EventType.Motion,
                             "Motion detected",
                             timestamp = System.currentTimeMillis(),
+                            screenshotPath = screenshot,
+                            videoPath = video,
                         )
                     )
                 }
@@ -137,6 +144,24 @@ class SentryMonitoringService : LifecycleService() {
             val nm = getSystemService(NotificationManager::class.java)
             nm.createNotificationChannel(channel)
         }
+    }
+
+    private fun saveScreenshot(mat: Mat): String {
+        val dir = File(filesDir, "events").apply { mkdirs() }
+        val file = File(dir, "screenshot_${System.currentTimeMillis()}.jpg")
+        val bgr = Mat()
+        Imgproc.cvtColor(mat, bgr, Imgproc.COLOR_RGBA2BGR)
+        Imgcodecs.imwrite(file.absolutePath, bgr)
+        bgr.release()
+        return file.absolutePath
+    }
+
+    private fun recordVideo(durationSec: Int): String {
+        val dir = File(filesDir, "events").apply { mkdirs() }
+        val file = File(dir, "video_${System.currentTimeMillis()}.mp4")
+        // Placeholder for real video recording
+        file.writeBytes(ByteArray(0))
+        return file.absolutePath
     }
 
     companion object {

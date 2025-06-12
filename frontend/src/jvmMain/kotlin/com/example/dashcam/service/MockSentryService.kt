@@ -47,6 +47,8 @@ class MockSentryService : SentryService {
                         type = type,
                         description = desc,
                         timestamp = System.currentTimeMillis(),
+                        screenshotPath = null,
+                        videoPath = null,
                     )
                 )
             }

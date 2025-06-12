@@ -11,5 +11,8 @@ class SettingsScreenTest : BehaviorSpec({
         Then("the dark mode option is shown") {
             rule.onNodeWithText("Dark Mode").assertExists()
         }
+        Then("the clip length slider is shown") {
+            rule.onNodeWithText("Clip Length").assertExists()
+        }
     }
 })
