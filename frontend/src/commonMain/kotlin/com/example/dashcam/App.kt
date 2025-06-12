@@ -19,7 +19,8 @@ fun DashcamApp(appViewModel: AppViewModel, dashcamViewModel: DashcamViewModel) {
                 s.tab,
                 onSelectTab = appViewModel::selectTab,
                 dashcamViewModel = dashcamViewModel,
-                onPermissionsRequired = appViewModel::requestPermissions
+                onPermissionsRequired = appViewModel::requestPermissions,
+                onShowOnboarding = appViewModel::showOnboarding
             )
         }
     }
