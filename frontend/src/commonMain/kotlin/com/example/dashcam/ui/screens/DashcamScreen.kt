@@ -32,7 +32,7 @@ import com.example.dashcam.camera.isCameraPermissionGranted
 /**
  * Simple dashcam screen that mocks a recording session.
  */
-@Preview
+
 @Composable
 fun DashcamScreen(onMissingPermissions: () -> Unit = {}) {
     var recording by remember { mutableStateOf(false) }
