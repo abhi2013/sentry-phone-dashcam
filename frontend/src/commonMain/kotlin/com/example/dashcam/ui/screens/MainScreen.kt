@@ -19,7 +19,12 @@ import com.example.dashcam.DashcamViewModel
 import com.example.dashcam.ui.MainTab
 @Preview
 @Composable
-fun MainScreen(tab: MainTab, onSelectTab: (MainTab) -> Unit, dashcamViewModel: DashcamViewModel) {
+fun MainScreen(
+    tab: MainTab,
+    onSelectTab: (MainTab) -> Unit,
+    dashcamViewModel: DashcamViewModel,
+    onPermissionsRequired: () -> Unit,
+) {
     Scaffold(bottomBar = {
         NavigationBar {
             NavigationBarItem(
@@ -50,7 +55,7 @@ fun MainScreen(tab: MainTab, onSelectTab: (MainTab) -> Unit, dashcamViewModel: D
     }) { inner ->
         Box(Modifier.fillMaxSize().padding(inner)) {
             when (tab) {
-                MainTab.Dashcam -> DashcamScreen()
+                MainTab.Dashcam -> DashcamScreen(onMissingPermissions = onPermissionsRequired)
                 MainTab.Sentry -> SentryScreen(dashcamViewModel)
                 MainTab.History -> HistoryScreen(dashcamViewModel)
                 MainTab.Settings -> SettingsScreen()

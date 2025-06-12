@@ -12,6 +12,7 @@ class AppViewModel {
     fun loginSuccess() { _screen.value = Screen.Permissions }
     fun signupSuccess() { _screen.value = Screen.Permissions }
     fun permissionsGranted() { _screen.value = Screen.Main() }
+    fun requestPermissions() { _screen.value = Screen.Permissions }
     fun selectTab(tab: MainTab) {
         val current = _screen.value
         if (current is Screen.Main) {
