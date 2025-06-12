@@ -191,9 +191,15 @@ class SentryMonitoringService : LifecycleService() {
 
     private fun detectHuman(gray: Mat, sensitivity: Int): Boolean {
         val locations = MatOfRect()
-        hog.detectMultiScale(gray, locations)
+        val weights = org.opencv.core.MatOfDouble()
+        // Use the simplest overload of detectMultiScale that returns both
+        // locations and weights. The number of detected objects is
+        // compared against the sensitivity value.
+        hog.detectMultiScale(gray, locations, weights)
         val count = locations.toArray().size
         locations.release()
+        weights.release()
+        // Map sensitivity 1..10 to roughly 0..2+ detections
         return count >= sensitivity / 5
     }
 
