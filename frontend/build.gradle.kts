@@ -38,6 +38,7 @@ kotlin {
 
                 implementation("com.quickbirdstudios:opencv:4.5.3.0")
                 implementation("androidx.compose.ui:ui:1.8.2")
+                implementation("androidx.compose.foundation:foundation")
                 implementation("androidx.activity:activity-compose:1.10.1")
                 implementation("androidx.lifecycle:lifecycle-service")
                 implementation("androidx.lifecycle:lifecycle-runtime-compose:2.9.1")

@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -32,7 +33,7 @@ import com.example.dashcam.camera.isCameraPermissionGranted
 /**
  * Simple dashcam screen that mocks a recording session.
  */
-@Preview
+
 @Composable
 fun DashcamScreen(onMissingPermissions: () -> Unit = {}) {
     var recording by remember { mutableStateOf(false) }
@@ -70,7 +71,7 @@ fun DashcamScreen(onMissingPermissions: () -> Unit = {}) {
                     onClick = { recording = !recording },
                     containerColor = if (recording) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary,
                     contentColor = MaterialTheme.colorScheme.onPrimary,
-                    enabled = hasPermission
+                    //enabled = hasPermission
                 ) {
                     Icon(
                         imageVector = if (recording) Icons.Default.Stop else Icons.Default.FiberManualRecord,

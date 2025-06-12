@@ -11,7 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
-@Preview
+
 @Composable
 fun LoginScreen(onLogin: () -> Unit, onSignup: () -> Unit) {
     var email by remember { mutableStateOf("") }
