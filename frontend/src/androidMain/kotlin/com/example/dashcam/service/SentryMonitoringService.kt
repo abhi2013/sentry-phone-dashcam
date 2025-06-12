@@ -44,7 +44,7 @@ class SentryMonitoringService : LifecycleService() {
     private var cameraProvider: ProcessCameraProvider? = null
     private var previous: Mat? = null
     private var lastEventTime = 0L
-    private val hog = HOGDescriptor().apply { setSVMDetector(HOGDescriptor.getDefaultPeopleDetector()) }
+    private lateinit var hog: HOGDescriptor
 
     override fun onCreate() {
         super.onCreate()
@@ -53,6 +53,9 @@ class SentryMonitoringService : LifecycleService() {
             Log.e(TAG, "OpenCV init failed")
             stopSelf()
             return
+        }
+        hog = HOGDescriptor().apply {
+            setSVMDetector(HOGDescriptor.getDefaultPeopleDetector())
         }
         val notification: Notification = NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("Sentry Monitoring")
