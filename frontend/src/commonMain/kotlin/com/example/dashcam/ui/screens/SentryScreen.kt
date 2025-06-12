@@ -14,7 +14,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SmallTopAppBar
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -37,7 +37,7 @@ fun SentryScreen(viewModel: DashcamViewModel) {
     val events = viewModel.events.collectAsState()
     val hasCamera = ensureCameraPermission()
 
-    Scaffold(topBar = { SmallTopAppBar(title = { Text("Sentry Mode") }) }) { inner ->
+    Scaffold(topBar = { TopAppBar(title = { Text("Sentry Mode") }) }) { inner ->
         Column(modifier = Modifier.fillMaxSize().padding(inner).padding(16.dp)) {
             if (hasCamera) {
                 CameraPreview(
