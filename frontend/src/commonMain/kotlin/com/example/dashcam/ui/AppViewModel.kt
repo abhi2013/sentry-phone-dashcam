@@ -3,11 +3,17 @@ package com.example.dashcam.ui
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
-class AppViewModel {
-    private val _screen = MutableStateFlow<Screen>(Screen.Onboarding)
+class AppViewModel(
+    startScreen: Screen = if (OnboardingStore.isCompleted()) Screen.Login else Screen.Onboarding
+) {
+    private val _screen = MutableStateFlow<Screen>(startScreen)
     val screen: StateFlow<Screen> = _screen
 
-    fun completeOnboarding() { _screen.value = Screen.Login }
+    fun completeOnboarding() {
+        OnboardingStore.setCompleted(true)
+        _screen.value = Screen.Login
+    }
+    fun showOnboarding() { _screen.value = Screen.Onboarding }
     fun showSignup() { _screen.value = Screen.Signup }
     fun loginSuccess() { _screen.value = Screen.Permissions }
     fun signupSuccess() { _screen.value = Screen.Permissions }

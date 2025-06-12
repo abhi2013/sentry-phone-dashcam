@@ -21,6 +21,7 @@ fun DashcamApp(appViewModel: AppViewModel, dashcamViewModel: DashcamViewModel) {
                 dashcamViewModel = dashcamViewModel,
                 onPermissionsRequired = appViewModel::requestPermissions,
                 onEventSelected = appViewModel::showEvent,
+                onShowOnboarding = appViewModel::showOnboarding
             )
             is Screen.EventDetail -> EventDetailsScreen(event = s.event, onBack = appViewModel::closeEvent)
         }

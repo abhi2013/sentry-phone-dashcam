@@ -26,6 +26,7 @@ fun MainScreen(
     dashcamViewModel: DashcamViewModel,
     onPermissionsRequired: () -> Unit,
     onEventSelected: (Event) -> Unit = {},
+    onShowOnboarding: () -> Unit,
 ) {
     Scaffold(bottomBar = {
         NavigationBar {
@@ -60,7 +61,7 @@ fun MainScreen(
                 MainTab.Dashcam -> DashcamScreen(onMissingPermissions = onPermissionsRequired)
                 MainTab.Sentry -> SentryScreen(dashcamViewModel)
                 MainTab.History -> HistoryScreen(dashcamViewModel, onEventSelected)
-                MainTab.Settings -> SettingsScreen()
+                MainTab.Settings -> SettingsScreen(onShowOnboarding)
             }
         }
     }
