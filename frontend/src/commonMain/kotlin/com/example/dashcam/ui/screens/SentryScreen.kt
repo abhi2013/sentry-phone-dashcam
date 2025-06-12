@@ -11,6 +11,7 @@ import androidx.compose.material.icons.filled.VolumeUp
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -31,6 +32,7 @@ import com.example.dashcam.camera.ensureCameraPermission
  * Screen that allows sentry mode to be toggled and shows recent events.
  */
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SentryScreen(viewModel: DashcamViewModel) {
     val enabled = viewModel.sentryEnabled.collectAsState()
