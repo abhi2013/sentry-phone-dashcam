@@ -88,6 +88,17 @@ It’s like Tesla Sentry Mode — for everyone.
 Want to contribute or fork your own version?
 Pull requests welcome! Check out our open issues for tasks to tackle.
 
+### Running Tests
+
+The project includes JVM unit tests and Android instrumentation tests using Cucumber. To run them locally you need the Android SDK and an emulator:
+
+```
+gradle jvmTest --no-daemon
+gradle connectedAndroidTest --no-daemon
+```
+
+If the Gradle wrapper jar is missing, generate it with `gradle wrapper` before running the tests.
+
 ---
 
 ## 🧭 Roadmap
