@@ -3,6 +3,7 @@ package com.example.dashcam.service
 import com.example.dashcam.Event
 import com.example.dashcam.EventType
 import com.example.dashcam.SentryService
+import com.example.dashcam.Settings
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
