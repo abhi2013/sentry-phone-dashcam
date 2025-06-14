@@ -32,8 +32,11 @@ class MockSentryService : SentryService {
         _isActive.value = true
         job = scope.launch {
             val types = EventType.values()
+            var last = 0L
             while (_isActive.value) {
                 delay(3000)
+                val now = System.currentTimeMillis()
+                if (now - last < Settings.eventThrottleMillis.value) continue
                 val type = types.random()
                 val desc = when (type) {
                     EventType.Motion -> "Motion detected"
@@ -51,6 +54,7 @@ class MockSentryService : SentryService {
                         videoPath = null,
                     )
                 )
+                last = now
             }
         }
     }

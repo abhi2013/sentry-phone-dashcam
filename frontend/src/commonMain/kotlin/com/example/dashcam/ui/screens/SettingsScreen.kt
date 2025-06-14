@@ -8,6 +8,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.Button
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -16,7 +17,9 @@ import kotlin.math.roundToInt
 
 @Composable
 fun SettingsScreen(onShowOnboarding: () -> Unit) {
-  val duration = Settings.videoDurationSec.collectAsState()
+    val duration = Settings.videoDurationSec.collectAsState()
+    val throttle = Settings.eventThrottleMillis.collectAsState()
+    val sensitivity = Settings.humanSensitivity.collectAsState()
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text("Dark Mode", style = MaterialTheme.typography.bodyLarge)
@@ -25,11 +28,27 @@ fun SettingsScreen(onShowOnboarding: () -> Unit) {
         }
         Spacer(Modifier.height(32.dp))
         Text("Clip Length", style = MaterialTheme.typography.bodyLarge)
-        Text("${duration.value}s", style = MaterialTheme.typography.bodyMedium)
+        Text(String.format("%.2f s", duration.value), style = MaterialTheme.typography.bodyMedium)
         Slider(
-            value = duration.value.toFloat(),
-            onValueChange = { Settings.setVideoDuration(it.roundToInt()) },
-            valueRange = Settings.MIN_DURATION.toFloat()..Settings.MAX_DURATION.toFloat(),
+            value = duration.value,
+            onValueChange = { Settings.setVideoDuration((it * 4).roundToInt() / 4f) },
+            valueRange = Settings.MIN_DURATION..Settings.MAX_DURATION,
+        )
+        Spacer(Modifier.height(32.dp))
+        Text("Event Throttle", style = MaterialTheme.typography.bodyLarge)
+        Text("${throttle.value} ms", style = MaterialTheme.typography.bodyMedium)
+        Slider(
+            value = throttle.value.toFloat(),
+            onValueChange = { Settings.setEventThrottle(it.roundToInt()) },
+            valueRange = Settings.MIN_EVENT_THROTTLE.toFloat()..Settings.MAX_EVENT_THROTTLE.toFloat(),
+        )
+        Spacer(Modifier.height(32.dp))
+        Text("Human Sensitivity", style = MaterialTheme.typography.bodyLarge)
+        Text("${sensitivity.value}", style = MaterialTheme.typography.bodyMedium)
+        Slider(
+            value = sensitivity.value.toFloat(),
+            onValueChange = { Settings.setHumanSensitivity(it.roundToInt()) },
+            valueRange = Settings.MIN_SENSITIVITY.toFloat()..Settings.MAX_SENSITIVITY.toFloat(),
         )
         Spacer(Modifier.height(32.dp))
         Button(onClick = onShowOnboarding) { Text("View Onboarding") }

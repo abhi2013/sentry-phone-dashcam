@@ -27,6 +27,11 @@ import com.example.dashcam.DashcamViewModel
 import com.example.dashcam.EventType
 import com.example.dashcam.camera.CameraPreview
 import com.example.dashcam.camera.ensureCameraPermission
+import java.time.Instant
+import java.time.LocalDate
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 
 /**
  * Screen that allows sentry mode to be toggled and shows recent events.
@@ -45,7 +50,7 @@ fun SentryScreen(viewModel: DashcamViewModel) {
                 CameraPreview(
                     Modifier
                         .fillMaxWidth()
-                        .height(200.dp)
+                        .height(300.dp)
                 )
                 Spacer(Modifier.height(16.dp))
             }
@@ -56,13 +61,14 @@ fun SentryScreen(viewModel: DashcamViewModel) {
                 Text(if (enabled.value) "Disable Sentry" else "Enable Sentry")
             }
             Spacer(Modifier.height(16.dp))
-            if (events.value.isEmpty()) {
+            val recent = events.value.sortedByDescending { it.timestamp }.take(2)
+            if (recent.isEmpty()) {
                 Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
                     Text("No events detected yet", style = MaterialTheme.typography.bodyMedium)
                 }
             } else {
                 LazyColumn(modifier = Modifier.weight(1f)) {
-                    items(events.value) { event ->
+                    items(recent) { event ->
                         Card(modifier = Modifier.padding(vertical = 4.dp)) {
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
@@ -74,7 +80,13 @@ fun SentryScreen(viewModel: DashcamViewModel) {
                                     tint = MaterialTheme.colorScheme.primary
                                 )
                                 Spacer(Modifier.width(12.dp))
-                                Text(event.description, style = MaterialTheme.typography.bodyLarge)
+                                Column {
+                                    Text(event.description, style = MaterialTheme.typography.bodyLarge)
+                                    Text(
+                                        formatTime(event.timestamp),
+                                        style = MaterialTheme.typography.bodySmall
+                                    )
+                                }
                             }
                         }
                     }
@@ -90,4 +102,19 @@ private fun iconForEvent(type: EventType): ImageVector = when (type) {
     EventType.Vehicle -> Icons.Default.DirectionsCar
     EventType.Collision -> Icons.Default.Warning
     EventType.Audio -> Icons.Default.VolumeUp
+}
+
+private fun formatTime(timestamp: Long): String {
+    val eventDate = Instant.ofEpochMilli(timestamp).atZone(ZoneId.systemDefault()).toLocalDate()
+    val nowDate = LocalDate.now()
+    val days = ChronoUnit.DAYS.between(eventDate, nowDate)
+    val dayLabel = when (days) {
+        0L -> "Today"
+        1L -> "Yesterday"
+        else -> DateTimeFormatter.ofPattern("yyyy-MM-dd").format(eventDate)
+    }
+    val time = DateTimeFormatter.ofPattern("HH:mm").format(
+        Instant.ofEpochMilli(timestamp).atZone(ZoneId.systemDefault())
+    )
+    return "$dayLabel $time"
 }
