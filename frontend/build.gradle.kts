@@ -66,6 +66,9 @@ kotlin {
                 implementation("androidx.test.espresso:espresso-core:3.6.1")
                 implementation("androidx.compose.ui:ui-test-junit4:1.8.2")
                 implementation("androidx.compose.ui:ui-test-junit4")
+                // Use the latest 7.x release which is available on Maven Central
+                implementation("io.cucumber:cucumber-android:7.18.1")
+                implementation("io.cucumber:cucumber-picocontainer:7.18.1")
             }
         }
 
@@ -80,7 +83,8 @@ android {
         applicationId = "com.example.dashcam"
         minSdk = 26
         targetSdk = 34
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "com.example.dashcam.CucumberTestRunner"
+        testInstrumentationRunnerArgument("cucumberOptions", "--plugin pretty")
     }
 
     buildFeatures {
